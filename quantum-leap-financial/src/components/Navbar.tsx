@@ -10,6 +10,13 @@ const Navbar = () => {
   const activeClass = "text-yellow-400";
   const defaultClass = "hover:text-yellow-400 transition-colors";
 
+  const navLinks = [
+    { path: '/portfolio', label: 'Portfolio' },
+    { path: '/market', label: 'Market' },
+    { path: '/transactions', label: 'Transactions' },
+    { path: '/calculators', label: 'Calculators' }
+  ];
+
   return (
     <nav className="bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg">
       <div className="container mx-auto px-4">
@@ -19,24 +26,15 @@ const Navbar = () => {
           </Link>
           
           <div className="hidden md:flex items-center gap-6">
-            <Link 
-              to="/portfolio" 
-              className={isActive('/portfolio') ? activeClass : defaultClass}
-            >
-              Portfolio
-            </Link>
-            <Link 
-              to="/market" 
-              className={isActive('/market') ? activeClass : defaultClass}
-            >
-              Market
-            </Link>
-            <Link 
-              to="/transactions" 
-              className={isActive('/transactions') ? activeClass : defaultClass}
-            >
-              Transactions
-            </Link>
+            {navLinks.map(({ path, label }) => (
+              <Link 
+                key={path}
+                to={path} 
+                className={isActive(path) ? activeClass : defaultClass}
+              >
+                {label}
+              </Link>
+            ))}
             <ThemeToggle />
             <Link 
               to="/login"
@@ -63,27 +61,16 @@ const Navbar = () => {
 
         {isMenuOpen && (
           <div className="md:hidden py-4 space-y-2">
-            <Link 
-              to="/portfolio"
-              className="block py-2 px-4 rounded hover:bg-blue-500 transition-colors"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Portfolio
-            </Link>
-            <Link 
-              to="/market"
-              className="block py-2 px-4 rounded hover:bg-blue-500 transition-colors"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Market
-            </Link>
-            <Link 
-              to="/transactions"
-              className="block py-2 px-4 rounded hover:bg-blue-500 transition-colors"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Transactions
-            </Link>
+            {navLinks.map(({ path, label }) => (
+              <Link 
+                key={path}
+                to={path}
+                className="block py-2 px-4 rounded hover:bg-blue-500 transition-colors"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                {label}
+              </Link>
+            ))}
             <Link 
               to="/login"
               className="block py-2 px-4 rounded hover:bg-blue-500 transition-colors"
