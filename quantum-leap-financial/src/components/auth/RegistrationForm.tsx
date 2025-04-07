@@ -1,27 +1,77 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Button from '../ui/Button';
 import Input from '../ui/Input';
 import Label from '../ui/Label';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/Card';
 
 export default function RegistrationForm() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [error, setError] = useState('');
+  const navigate = useNavigate();
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+    confirmPassword: ''
+  });
+  const [errors, setErrors] = useState<{[key: string]: string}>({});
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
-      if (!email || !password || !confirmPassword) {
-          setError('All fields are required');
-          return;
+  const validateForm = () => {
+    const newErrors: {[key: string]: string} = {};
+    
+    if (!formData.email) {
+      newErrors.email = 'Email is required';
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = 'Email is invalid';
+    }
+
+    if (!formData.password) {
+      newErrors.password = 'Password is required';
+    } else if (formData.password.length < 8) {
+      newErrors.password = 'Password must be at least 8 characters';
+    }
+
+    if (formData.password !== formData.confirmPassword) {
+      newErrors.confirmPassword = 'Passwords do not match';
+    }
+
+    return newErrors;
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const validationErrors = validateForm();
+    
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
+
+    try {
+      // Replace with actual API call
+      const response = await fetch('/api/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        navigate('/login');
+      } else {
+        const data = await response.json();
+        setErrors({ submit: data.message });
       }
-      if (password !== confirmPassword) {
-          setError('Passwords do not match');
-          return;
-      }
-      setError('');
-      alert('Registration successful');
+    } catch (error) {
+      setErrors({ submit: 'Registration failed. Please try again.' });
+    }
   };
 
   return (
@@ -30,44 +80,52 @@ export default function RegistrationForm() {
         <CardTitle className="text-center text-2xl font-bold">Register</CardTitle>
       </CardHeader>
       <CardContent className="p-6">
-        <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <Label htmlFor="email" className="block text-sm font-medium">
-              Email
-            </Label>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <Label htmlFor="email">Email</Label>
             <Input
               id="email"
+              name="email"
               type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="mt-2 p-2 border rounded w-full"
+              value={formData.email}
+              onChange={handleChange}
+              className={`mt-1 ${errors.email ? 'border-red-500' : ''}`}
             />
+            {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
           </div>
-          <div className="mb-4">
-            <Label htmlFor="password" className="block text-sm font-medium">
-              Password
-            </Label>
+
+          <div>
+            <Label htmlFor="password">Password</Label>
             <Input
               id="password"
+              name="password"
               type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="mt-2 p-2 border rounded w-full"
+              value={formData.password}
+              onChange={handleChange}
+              className={`mt-1 ${errors.password ? 'border-red-500' : ''}`}
             />
+            {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
           </div>
-          <div className="mb-4">
-            <Label htmlFor="confirm-password" className="block text-sm font-medium">
-              Confirm Password
-            </Label>
+
+          <div>
+            <Label htmlFor="confirmPassword">Confirm Password</Label>
             <Input
-              id="confirm-password"
+              id="confirmPassword"
+              name="confirmPassword"
               type="password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              className="mt-2 p-2 border rounded w-full"
+              value={formData.confirmPassword}
+              onChange={handleChange}
+              className={`mt-1 ${errors.confirmPassword ? 'border-red-500' : ''}`}
             />
+            {errors.confirmPassword && (
+              <p className="text-red-500 text-sm mt-1">{errors.confirmPassword}</p>
+            )}
           </div>
-          {error && <p className="text-red-500 mb-4">{error}</p>}
+
+          {errors.submit && (
+            <p className="text-red-500 text-sm text-center">{errors.submit}</p>
+          )}
+
           <Button
             type="submit"
             className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-700 transition"
