@@ -1,1 +1,0 @@
-# SalmanSarwar1-Quantum-Leap-Financial
