@@ -2,9 +2,12 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
-import Dashboard from './pages/Dashboard';
+import Portfolio from './pages/Portfolio';
+import Markets from './pages/Markets';  // Changed from Market to Markets
+import Transactions from './pages/Transactions';  // Changed from Transaction to Transactions
 import Calculators from './pages/Calculators';
-// ...existing imports...
+import Login from './pages/Login';
+import Register from './pages/Register';
 
 function App() {
   return (
@@ -14,9 +17,12 @@ function App() {
         <main className="container mx-auto px-4 py-8">
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/portfolio" element={<Portfolio />} />
+            <Route path="/markets" element={<Markets />} />
+            <Route path="/transactions" element={<Transactions />} />
             <Route path="/calculators" element={<Calculators />} />
-            {/* ...existing routes... */}
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
           </Routes>
         </main>
       </div>
