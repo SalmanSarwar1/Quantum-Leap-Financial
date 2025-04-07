@@ -1,18 +1,16 @@
 import React, { useState } from 'react';
-import Button from '../components/ui/Button';
-import Input from '../components/ui/Input';
-import Label from '../components/ui/Label';
-import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/Card';
+import Button from '../ui/Button';
+import Input from '../ui/Input';
+import Label from '../ui/Label';
+import { Card, CardContent, CardHeader, CardTitle } from '../ui/Card';
 
-interface RegistrationFormProps {}
-
-const RegistrationForm: React.FC<RegistrationFormProps> = () => {
+export default function RegistrationForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !password || !confirmPassword) {
       setError('All fields are required');
@@ -25,6 +23,7 @@ const RegistrationForm: React.FC<RegistrationFormProps> = () => {
     setError('');
     alert('Registration successful');
   };
+
   return (
     <Card className="w-full max-w-md mx-auto shadow-lg rounded-lg overflow-hidden">
       <CardHeader className="bg-gradient-to-r from-blue-500 to-purple-500 text-white p-4">
@@ -79,6 +78,4 @@ const RegistrationForm: React.FC<RegistrationFormProps> = () => {
       </CardContent>
     </Card>
   );
-};
-
-export default RegistrationForm;
+}
