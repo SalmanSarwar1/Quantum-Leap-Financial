@@ -1,31 +1,45 @@
 import React, { useState } from 'react';
-import { 
+import {
   CompoundInterestCalculator,
   MortgageCalculator,
-  RetirementCalculator 
+  RetirementCalculator,
+  FinancialCalculator,
+  ScientificCalculator,
 } from '../components/calculators';
 
-type CalculatorType = 'compound' | 'mortgage' | 'retirement';
+type CalculatorType = 'compound' | 'mortgage' | 'retirement' | 'financial' | 'scientific';
 
 const calculatorsList = [
   {
     id: 'compound',
     title: 'Compound Interest Calculator',
     description: 'Calculate how your investments will grow with compound interest over time.',
-    icon: '💰'
+    icon: '💰',
   },
   {
     id: 'mortgage',
     title: 'Mortgage Calculator',
     description: 'Estimate your monthly mortgage payments and total interest costs.',
-    icon: '🏠'
+    icon: '🏠',
   },
   {
     id: 'retirement',
     title: 'Retirement Calculator',
     description: 'Plan your retirement by calculating future savings and returns.',
-    icon: '👴'
-  }
+    icon: '👴',
+  },
+  {
+    id: 'financial',
+    title: 'Financial Calculator',
+    description: 'Calculate NPV, IRR, and other financial metrics.',
+    icon: '📊',
+  },
+  {
+    id: 'scientific',
+    title: 'Scientific Calculator',
+    description: 'Perform advanced scientific calculations.',
+    icon: '🔬',
+  },
 ];
 
 const Calculators = () => {
@@ -39,6 +53,10 @@ const Calculators = () => {
         return <MortgageCalculator />;
       case 'retirement':
         return <RetirementCalculator />;
+      case 'financial':
+        return <FinancialCalculator />;
+      case 'scientific':
+        return <ScientificCalculator />;
       default:
         return null;
     }
@@ -47,7 +65,7 @@ const Calculators = () => {
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-4xl font-bold mb-8">Financial Calculators</h1>
-      
+
       {!selectedCalculator ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {calculatorsList.map((calc) => (
