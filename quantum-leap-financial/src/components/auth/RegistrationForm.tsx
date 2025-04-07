@@ -10,18 +10,18 @@ export default function RegistrationForm() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!email || !password || !confirmPassword) {
-      setError('All fields are required');
-      return;
-    }
-    if (password !== confirmPassword) {
-      setError('Passwords do not match');
-      return;
-    }
-    setError('');
-    alert('Registration successful');
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+      if (!email || !password || !confirmPassword) {
+          setError('All fields are required');
+          return;
+      }
+      if (password !== confirmPassword) {
+          setError('Passwords do not match');
+          return;
+      }
+      setError('');
+      alert('Registration successful');
   };
 
   return (
