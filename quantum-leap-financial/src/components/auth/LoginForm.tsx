@@ -8,15 +8,37 @@ const LoginForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError('');
+    setSuccess('');
+
     if (!email || !password) {
       setError('All fields are required');
       return;
     }
-    setError('');
-    alert('Login successful');
+
+    try {
+      const response = await fetch('http://localhost:5000/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (!response.ok) {
+        const { message } = await response.json();
+        setError(message || 'Login failed');
+        return;
+      }
+
+      const { token } = await response.json();
+      localStorage.setItem('token', token); // Save token for authenticated requests
+      setSuccess('Login successful!');
+    } catch (err) {
+      setError('An error occurred. Please try again.');
+    }
   };
 
   return (
@@ -47,6 +69,7 @@ const LoginForm = () => {
             />
           </div>
           {error && <p className="text-red-500 mb-4">{error}</p>}
+          {success && <p className="text-green-500 mb-4">{success}</p>}
           <Button type="submit" className="w-full">
             Login
           </Button>
